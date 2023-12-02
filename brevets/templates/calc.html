@@ -124,10 +124,11 @@
          <script>
             $(document).ready(function() {
                 
-                // Javascript for Submit
+                // Javascript for Submit               
                $('#submit_button').click(function() {
                    var controlData = [];
 
+                   // Collect data from the form
                    // Iterate over each control row to collect data
                    $(".control").each(function() {
                        var control = $(this);
@@ -141,54 +142,59 @@
                        };
                        controlData.push(data);
                    });
-
+                   
+                   
+                   // Send data to the new API endpoint
                    $.ajax({
-                       url: SCRIPT_ROOT + '/submit',
+                       url: 'http://localhost:5001/api/brevets'',
                        type: 'POST',
                        contentType: 'application/json',
                        data: JSON.stringify(controlData),
                        success: function(response) {
+                           console.log("Data stored successfully");
                            // Clear the form fields after successful submission
-                           console.log("data stored successfully")
-                           
                            $(".control").each(function() {
                                $(this).find("input[type='number'], input[type='text'], input[type='datetime-local']").val('');
                                $(this).find(".notes").text('');
                            });
                        },
                        error: function(error) {
-                           console.log(error);
+                           console.log("Error:", error);
                        }
                    });
                });
+
                
                
 
                // Javascript for Display
                $('#display_button').click(function() {
+                   // Fetch data from the new API endpoint
                    $.ajax({
-                       url: SCRIPT_ROOT + '/display',
+                       url: 'http://localhost:5001/api/brevets', // Update with actual API URL
                        type: 'GET',
                        success: function(data) {
-                           console.log(data)
+                           console.log("Data retrieved successfully");
 
                            // Clear existing rows before populating new data
                            $(".control input").val('');
-                           
-                           data.forEach(function(controlData, index) {
+
+                           var brevets = JSON.parse(data); // Assuming data is a JSON string
+
+                           brevets.forEach(function(brevet, index) {
                                if (index < $(".control").length) {
                                    var controlRow = $(".control").eq(index);
-                                   controlRow.find("input[name='miles']").val(controlData.miles);
-                                   controlRow.find("input[name='km']").val(controlData.km);
-                                   controlRow.find("input[name='location']").val(controlData.location);
-                                   controlRow.find("input[name='open']").val(controlData.open);
-                                   controlRow.find("input[name='close']").val(controlData.close);
-                                   controlRow.find(".notes").text(controlData.notes);
+                                   controlRow.find("input[name='miles']").val(brevet.miles);
+                                   controlRow.find("input[name='km']").val(brevet.km);
+                                   controlRow.find("input[name='location']").val(brevet.location);
+                                   controlRow.find("input[name='open']").val(brevet.open);
+                                   controlRow.find("input[name='close']").val(brevet.close);
+                                   controlRow.find(".notes").text(brevet.notes);
                                }
                            });
                        },
                        error: function(error) {
-                           console.log(error);
+                           console.log("Error:", error);
                        }
                    });
                });

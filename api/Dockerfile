@@ -1,7 +1,4 @@
-# Use an official Python runtime as a base image
 FROM python:3.8
-
-# Set metadata (optional)
 LABEL maintainer="amartush@uoregon.edu"
 
 # Set the working directory in the container to /app
@@ -17,8 +14,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app
 
 # Define the command to run the app
-CMD ["python", "flask_brevets.py"]
-
-
-
-
+CMD ["python", "flask_api.py"]
